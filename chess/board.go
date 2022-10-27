@@ -36,28 +36,16 @@ func (c *Cell) indices() (int, int) {
 	return rows[c.Row], columns[c.Column]
 }
 
-type Board [8][8]struct {
-	piece Piece
-}
-
-func NewBoard() *Board {
-	board := new(Board)
-	for r := 0; r < 8; r++ {
-		for c := 0; c < 8; c++ {
-			board[r][c].piece = nil
-		}
-	}
-	return board
-}
+type Board [8][8]Piece
 
 func (b *Board) Put(cell Cell, piece Piece) {
 	r, c := cell.indices()
-	b[r][c].piece = piece
+	b[r][c] = piece
 }
 
 func (b *Board) Get(cell Cell) Piece {
 	r, c := cell.indices()
-	return b[r][c].piece
+	return b[r][c]
 }
 
 func (b *Board) Move(from, to Cell) {
@@ -73,7 +61,7 @@ func (b *Board) Image() image.Image {
 
 	for _, ri := range rows {
 		for _, ci := range columns {
-			pic := b[ci][ri].piece
+			pic := b[ci][ri]
 			if pic != nil {
 				place := image.Point{X: ri * 60, Y: ci * 60}
 				p2 := image.Rectangle{

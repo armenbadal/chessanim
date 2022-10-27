@@ -1,10 +1,9 @@
 package main
 
-import (
-	"chessanim/chess"
-)
-
 func main() {
-	b := new(chess.Board)
-	print(b)
+	var s0 string = "a1"
+	var b0 []byte = []byte(s0)
+	println(b0)
+	println(string(rune(b0[0])))
+	println(string(rune(b0[1])))
 }

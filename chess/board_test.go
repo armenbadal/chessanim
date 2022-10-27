@@ -8,13 +8,8 @@ import (
 )
 
 func TestCreateBoard(t *testing.T) {
-	board := NewBoard()
-	if board == nil {
-		t.Fail()
-	}
-
+	board := new(Board)
 	board.Initial()
-
 	img := board.Image()
 
 	f, _ := os.Create("test.png")

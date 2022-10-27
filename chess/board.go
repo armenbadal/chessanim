@@ -2,13 +2,14 @@ package chess
 
 import (
 	"image"
+	"image/draw"
 )
 
 type Colour byte
 
 const (
-	White byte = 'W'
-	Black byte = 'B'
+	White Colour = 'W'
+	Black Colour = 'B'
 )
 
 type Name byte
@@ -56,11 +57,32 @@ func (c *Cell) indices() (int, int) {
 type Piece struct {
 	colour Colour
 	name   Name
+	image  image.Image
 }
+
+var (
+	WhiteKing  *Piece = &Piece{colour: White, name: King, image: createImage(whiteKingData)}
+	WhiteQueen *Piece = &Piece{colour: White, name: Queen, image: createImage(whiteQueenData)}
+)
 
 type Board [8][8]struct {
 	colour Colour
 	piece  *Piece
+}
+
+func NewBoard() *Board {
+	board := new(Board)
+	for r := 0; r < 8; r++ {
+		for c := 0; c < 8; c++ {
+			if (r+c)%2 == 0 {
+				board[r][c].colour = Black
+			} else {
+				board[r][c].colour = White
+			}
+			board[r][c].piece = nil
+		}
+	}
+	return board
 }
 
 func (b *Board) Put(cell Cell, piece *Piece) {
@@ -79,5 +101,24 @@ func (b *Board) Move(from, to Cell) {
 }
 
 func (b *Board) Image() image.Image {
-	return nil
+	board := createImage(baordGrayData)
+
+	img := image.NewNRGBA(board.Bounds())
+	draw.Draw(img, board.Bounds(), board, image.Point{X: 0, Y: 0}, draw.Src)
+
+	for _, ri := range rows {
+		for _, ci := range columns {
+			pic := b[ci][ri].piece
+			if pic != nil {
+				place := image.Point{X: ri * 60, Y: ci * 60}
+				p2 := image.Rectangle{
+					Min: place,
+					Max: place.Add(pic.image.Bounds().Size()),
+				}
+				draw.Draw(img, p2, pic.image, image.Point{X: 0, Y: 0}, draw.Over)
+			}
+		}
+	}
+
+	return img
 }

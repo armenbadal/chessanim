@@ -1,7 +1,10 @@
 package chess
 
 import (
+	"bytes"
 	_ "embed"
+	"image"
+	"image/png"
 )
 
 var (
@@ -34,3 +37,8 @@ var (
 	//go:embed images/black-pawn.png
 	blackPawnData []byte
 )
+
+func createImage(data []byte) image.Image {
+	png, _ := png.Decode(bytes.NewReader(data))
+	return png
+}

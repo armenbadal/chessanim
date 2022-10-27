@@ -5,24 +5,6 @@ import (
 	"image/draw"
 )
 
-type Colour byte
-
-const (
-	White Colour = 'W'
-	Black Colour = 'B'
-)
-
-type Name byte
-
-const (
-	King Name = iota
-	Queen
-	Rook
-	Bishop
-	Knight
-	Pawn
-)
-
 type Cell struct {
 	Row    byte
 	Column byte
@@ -54,43 +36,26 @@ func (c *Cell) indices() (int, int) {
 	return rows[c.Row], columns[c.Column]
 }
 
-type Piece struct {
-	colour Colour
-	name   Name
-	image  image.Image
-}
-
-var (
-	WhiteKing  *Piece = &Piece{colour: White, name: King, image: createImage(whiteKingData)}
-	WhiteQueen *Piece = &Piece{colour: White, name: Queen, image: createImage(whiteQueenData)}
-)
-
 type Board [8][8]struct {
-	colour Colour
-	piece  *Piece
+	piece Piece
 }
 
 func NewBoard() *Board {
 	board := new(Board)
 	for r := 0; r < 8; r++ {
 		for c := 0; c < 8; c++ {
-			if (r+c)%2 == 0 {
-				board[r][c].colour = Black
-			} else {
-				board[r][c].colour = White
-			}
 			board[r][c].piece = nil
 		}
 	}
 	return board
 }
 
-func (b *Board) Put(cell Cell, piece *Piece) {
+func (b *Board) Put(cell Cell, piece Piece) {
 	r, c := cell.indices()
 	b[r][c].piece = piece
 }
 
-func (b *Board) Get(cell Cell) *Piece {
+func (b *Board) Get(cell Cell) Piece {
 	r, c := cell.indices()
 	return b[r][c].piece
 }
@@ -113,12 +78,50 @@ func (b *Board) Image() image.Image {
 				place := image.Point{X: ri * 60, Y: ci * 60}
 				p2 := image.Rectangle{
 					Min: place,
-					Max: place.Add(pic.image.Bounds().Size()),
+					Max: place.Add(pic.Bounds().Size()),
 				}
-				draw.Draw(img, p2, pic.image, image.Point{X: 0, Y: 0}, draw.Over)
+				draw.Draw(img, p2, pic, image.Point{X: 0, Y: 0}, draw.Over)
 			}
 		}
 	}
 
 	return img
+}
+
+func (b *Board) Initial() {
+	b.Put(Cell{Column: 'a', Row: '1'}, WhiteRook)
+	b.Put(Cell{Column: 'b', Row: '1'}, WhiteKnight)
+	b.Put(Cell{Column: 'c', Row: '1'}, WhiteBishop)
+	b.Put(Cell{Column: 'd', Row: '1'}, WhiteQueen)
+	b.Put(Cell{Column: 'e', Row: '1'}, WhiteKing)
+	b.Put(Cell{Column: 'f', Row: '1'}, WhiteBishop)
+	b.Put(Cell{Column: 'g', Row: '1'}, WhiteKnight)
+	b.Put(Cell{Column: 'h', Row: '1'}, WhiteRook)
+
+	b.Put(Cell{Column: 'a', Row: '2'}, WhitePawn)
+	b.Put(Cell{Column: 'b', Row: '2'}, WhitePawn)
+	b.Put(Cell{Column: 'c', Row: '2'}, WhitePawn)
+	b.Put(Cell{Column: 'd', Row: '2'}, WhitePawn)
+	b.Put(Cell{Column: 'e', Row: '2'}, WhitePawn)
+	b.Put(Cell{Column: 'f', Row: '2'}, WhitePawn)
+	b.Put(Cell{Column: 'g', Row: '2'}, WhitePawn)
+	b.Put(Cell{Column: 'h', Row: '2'}, WhitePawn)
+
+	b.Put(Cell{Column: 'a', Row: '8'}, BlackRook)
+	b.Put(Cell{Column: 'b', Row: '8'}, BlackKnight)
+	b.Put(Cell{Column: 'c', Row: '8'}, BlackBishop)
+	b.Put(Cell{Column: 'd', Row: '8'}, BlackQueen)
+	b.Put(Cell{Column: 'e', Row: '8'}, BlackKing)
+	b.Put(Cell{Column: 'f', Row: '8'}, BlackBishop)
+	b.Put(Cell{Column: 'g', Row: '8'}, BlackKnight)
+	b.Put(Cell{Column: 'h', Row: '8'}, BlackRook)
+
+	b.Put(Cell{Column: 'a', Row: '7'}, BlackPawn)
+	b.Put(Cell{Column: 'b', Row: '7'}, BlackPawn)
+	b.Put(Cell{Column: 'c', Row: '7'}, BlackPawn)
+	b.Put(Cell{Column: 'd', Row: '7'}, BlackPawn)
+	b.Put(Cell{Column: 'e', Row: '7'}, BlackPawn)
+	b.Put(Cell{Column: 'f', Row: '7'}, BlackPawn)
+	b.Put(Cell{Column: 'g', Row: '7'}, BlackPawn)
+	b.Put(Cell{Column: 'h', Row: '7'}, BlackPawn)
 }

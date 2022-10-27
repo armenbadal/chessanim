@@ -42,3 +42,21 @@ func createImage(data []byte) image.Image {
 	png, _ := png.Decode(bytes.NewReader(data))
 	return png
 }
+
+type Piece image.Image
+
+var (
+	WhiteKing   Piece = createImage(whiteKingData)
+	WhiteQueen  Piece = createImage(whiteQueenData)
+	WhiteRook   Piece = createImage(whiteRookData)
+	WhiteKnight Piece = createImage(whiteKnightData)
+	WhiteBishop Piece = createImage(whiteBishopData)
+	WhitePawn   Piece = createImage(whitePawnData)
+
+	BlackKing   Piece = createImage(blackKingData)
+	BlackQueen  Piece = createImage(blackQueenData)
+	BlackRook   Piece = createImage(blackRookData)
+	BlackKnight Piece = createImage(blackKnightData)
+	BlackBishop Piece = createImage(blackBishopData)
+	BlackPawn   Piece = createImage(blackPawnData)
+)

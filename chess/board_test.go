@@ -13,13 +13,7 @@ func TestCreateBoard(t *testing.T) {
 		t.Fail()
 	}
 
-	k := createImage(whiteKingData)
-	pk := &Piece{colour: White, name: King, image: k}
-	board.Put(Cell{Column: 'b', Row: '2'}, pk)
-
-	q := createImage(blackQueenData)
-	pq := &Piece{colour: Black, name: Queen, image: q}
-	board.Put(Cell{Column: 'd', Row: '4'}, pq)
+	board.Initial()
 
 	img := board.Image()
 

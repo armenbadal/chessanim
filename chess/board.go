@@ -3,12 +3,8 @@ package chess
 import (
 	"image"
 	"image/draw"
+	"regexp"
 )
-
-type Cell struct {
-	Row    byte
-	Column byte
-}
 
 var rows = map[byte]int{
 	'8': 0,
@@ -32,23 +28,25 @@ var columns = map[byte]int{
 	'h': 7,
 }
 
-func (c *Cell) indices() (int, int) {
-	return rows[c.Row], columns[c.Column]
+func indices(cell string) (int, int) {
+	pat := regexp.MustCompile("^([a-h])([1-9])$")
+	sm := pat.FindStringSubmatch(cell)
+	return columns[sm[1][0]], rows[sm[2][0]]
 }
 
 type Board [8][8]Piece
 
-func (b *Board) Put(cell Cell, piece Piece) {
-	r, c := cell.indices()
+func (b *Board) Put(cell string, piece Piece) {
+	c, r := indices(cell)
 	b[r][c] = piece
 }
 
-func (b *Board) Get(cell Cell) Piece {
-	r, c := cell.indices()
+func (b *Board) Get(cell string) Piece {
+	c, r := indices(cell)
 	return b[r][c]
 }
 
-func (b *Board) Move(from, to Cell) {
+func (b *Board) Move(from, to string) {
 	b.Put(to, b.Get(from))
 	b.Put(from, nil)
 }
@@ -77,39 +75,39 @@ func (b *Board) Image() image.Image {
 }
 
 func (b *Board) Initial() {
-	b.Put(Cell{Column: 'a', Row: '1'}, WhiteRook)
-	b.Put(Cell{Column: 'b', Row: '1'}, WhiteKnight)
-	b.Put(Cell{Column: 'c', Row: '1'}, WhiteBishop)
-	b.Put(Cell{Column: 'd', Row: '1'}, WhiteQueen)
-	b.Put(Cell{Column: 'e', Row: '1'}, WhiteKing)
-	b.Put(Cell{Column: 'f', Row: '1'}, WhiteBishop)
-	b.Put(Cell{Column: 'g', Row: '1'}, WhiteKnight)
-	b.Put(Cell{Column: 'h', Row: '1'}, WhiteRook)
+	b.Put("a1", WhiteRook)
+	b.Put("b1", WhiteKnight)
+	b.Put("c1", WhiteBishop)
+	b.Put("d1", WhiteQueen)
+	b.Put("e1", WhiteKing)
+	b.Put("f1", WhiteBishop)
+	b.Put("g1", WhiteKnight)
+	b.Put("h1", WhiteRook)
 
-	b.Put(Cell{Column: 'a', Row: '2'}, WhitePawn)
-	b.Put(Cell{Column: 'b', Row: '2'}, WhitePawn)
-	b.Put(Cell{Column: 'c', Row: '2'}, WhitePawn)
-	b.Put(Cell{Column: 'd', Row: '2'}, WhitePawn)
-	b.Put(Cell{Column: 'e', Row: '2'}, WhitePawn)
-	b.Put(Cell{Column: 'f', Row: '2'}, WhitePawn)
-	b.Put(Cell{Column: 'g', Row: '2'}, WhitePawn)
-	b.Put(Cell{Column: 'h', Row: '2'}, WhitePawn)
+	b.Put("a2", WhitePawn)
+	b.Put("b2", WhitePawn)
+	b.Put("c2", WhitePawn)
+	b.Put("d2", WhitePawn)
+	b.Put("e2", WhitePawn)
+	b.Put("f2", WhitePawn)
+	b.Put("g2", WhitePawn)
+	b.Put("h2", WhitePawn)
 
-	b.Put(Cell{Column: 'a', Row: '8'}, BlackRook)
-	b.Put(Cell{Column: 'b', Row: '8'}, BlackKnight)
-	b.Put(Cell{Column: 'c', Row: '8'}, BlackBishop)
-	b.Put(Cell{Column: 'd', Row: '8'}, BlackQueen)
-	b.Put(Cell{Column: 'e', Row: '8'}, BlackKing)
-	b.Put(Cell{Column: 'f', Row: '8'}, BlackBishop)
-	b.Put(Cell{Column: 'g', Row: '8'}, BlackKnight)
-	b.Put(Cell{Column: 'h', Row: '8'}, BlackRook)
+	b.Put("a8", BlackRook)
+	b.Put("b8", BlackKnight)
+	b.Put("c8", BlackBishop)
+	b.Put("d8", BlackQueen)
+	b.Put("e8", BlackKing)
+	b.Put("f8", BlackBishop)
+	b.Put("g8", BlackKnight)
+	b.Put("h8", BlackRook)
 
-	b.Put(Cell{Column: 'a', Row: '7'}, BlackPawn)
-	b.Put(Cell{Column: 'b', Row: '7'}, BlackPawn)
-	b.Put(Cell{Column: 'c', Row: '7'}, BlackPawn)
-	b.Put(Cell{Column: 'd', Row: '7'}, BlackPawn)
-	b.Put(Cell{Column: 'e', Row: '7'}, BlackPawn)
-	b.Put(Cell{Column: 'f', Row: '7'}, BlackPawn)
-	b.Put(Cell{Column: 'g', Row: '7'}, BlackPawn)
-	b.Put(Cell{Column: 'h', Row: '7'}, BlackPawn)
+	b.Put("a7", BlackPawn)
+	b.Put("b7", BlackPawn)
+	b.Put("c7", BlackPawn)
+	b.Put("d7", BlackPawn)
+	b.Put("e7", BlackPawn)
+	b.Put("f7", BlackPawn)
+	b.Put("g7", BlackPawn)
+	b.Put("h7", BlackPawn)
 }

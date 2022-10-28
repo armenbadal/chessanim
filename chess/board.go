@@ -2,9 +2,12 @@ package chess
 
 import (
 	"image"
+	"image/color/palette"
 	"image/draw"
 	"regexp"
 )
+
+var BoardGray = createImage(baordGrayData)
 
 var rows = map[byte]int{
 	'8': 0,
@@ -51,22 +54,18 @@ func (b *Board) Move(from, to string) {
 	b.Put(from, nil)
 }
 
-func (b *Board) Image() image.Image {
-	board := createImage(baordGrayData)
+func (b *Board) Image() *image.Paletted {
+	zero := image.Pt(0, 0)
+	box := image.Rect(0, 0, 60, 60)
 
-	img := image.NewNRGBA(board.Bounds())
-	draw.Draw(img, board.Bounds(), board, image.Point{X: 0, Y: 0}, draw.Src)
+	img := image.NewPaletted(BoardGray.Bounds(), palette.Plan9)
+	draw.Draw(img, BoardGray.Bounds(), BoardGray, zero, draw.Src)
 
 	for _, ri := range rows {
 		for _, ci := range columns {
-			pic := b[ci][ri]
-			if pic != nil {
-				place := image.Point{X: ri * 60, Y: ci * 60}
-				p2 := image.Rectangle{
-					Min: place,
-					Max: place.Add(pic.Bounds().Size()),
-				}
-				draw.Draw(img, p2, pic, image.Point{X: 0, Y: 0}, draw.Over)
+			if pic := b[ci][ri]; pic != nil {
+				place := box.Add(image.Pt(ri*60, ci*60))
+				draw.Draw(img, place, pic, zero, draw.Over)
 			}
 		}
 	}
